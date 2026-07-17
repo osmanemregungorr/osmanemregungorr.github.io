@@ -40,7 +40,108 @@
 
         <h3 class="scroll-reveal">Kaynak Kod</h3>
         <div class="scroll-reveal code-container">
-            <pre><code>(Buraya güncel kodunu ekle)</code></pre>
+            <pre><code>#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <DHT.h>//D2 PİNİNİ KÜTÜPHANE İLE HEM OUTPUT HEM DE İNPUT YAPAR.
+
+#define mq_135 A1
+#define dht_22 2
+#define dht_tipi DHT22
+#define ldr A0
+#define kirmizi 9
+#define yesil 10
+#define mavi 11
+#define buzzer 6
+
+#define ekran_genislik 128
+#define ekran_yukseklik 64
+#define ekran_reset -1
+
+DHT dht(dht_22, dht_tipi);
+Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
+
+unsigned long son_ldr_okumasi=0;
+const unsigned long ldr_okuma_araligi=200;
+int anlik_isik=0;
+
+unsigned long son_dht_okumasi=0;
+const unsigned long dht_okuma_araligi=2500;
+float sicaklik=0.0;
+float nem=0.0;
+
+float min_nem=30.0;
+float max_nem=80.0;
+float min_sicaklik=17.0;
+float max_sicaklik=33.0;
+bool alarm=false;
+bool sensor_hata=false;
+
+unsigned long alarm_ses=0;
+const unsigned long alarm_ses_araligi=1000;
+
+void renk_sec(int k,int y,int m){
+analogWrite(kirmizi,k);
+analogWrite(yesil,y);
+analogWrite(mavi,m);
+}
+
+void setup() {
+  dht.begin();
+  Serial.begin(9600);
+
+  display.clearDisplay(); // Ekran hafızasını temizleme
+  display.setTextColor(SSD1306_WHITE); // Yazı rengini beyaz yapma
+  display.setTextSize(1); // Varsayılan yazı boyutunu 1 yapma
+
+  pinMode(kirmizi,OUTPUT);
+  pinMode(mavi,OUTPUT);
+  pinMode(yesil,OUTPUT);
+  pinMode(buzzer,OUTPUT);
+}
+
+void loop() {
+  unsigned long simdiki_zaman=millis();
+  if(simdiki_zaman-son_ldr_okumasi>=ldr_okuma_araligi){
+    son_ldr_okumasi=simdiki_zaman;
+    anlik_isik=map(analogRead(ldr),0,1023,0,100);
+    Serial.println("Alık Işık:");
+    Serial.print(anlik_isik);
+  }
+  if(simdiki_zaman-son_dht_okumasi>=dht_okuma_araligi){
+    float s=dht.readTemperature();
+    float n=dht.readHumidity();
+    son_dht_okumasi=simdiki_zaman;
+    if(s==s&&n==n){
+      sensor_hata=false;
+      sicaklik=s;
+      nem=n;
+      Serial.print("Sıcaklık: ");
+      Serial.println(s);
+      Serial.print("Nem: ");
+      Serial.println(n);
+    }
+    else{
+      sensor_hata=true;
+    }
+  }
+  if(sensor_hata==true){
+    renk_sec(0,0,255);
+  }
+  else{
+    if((max_nem >nem || nem<min_nem)||(max_sicaklik>sicaklik || sicaklik<min_sicaklik)){
+    renk_sec(255,0,0);
+    if(simdiki_zaman-alarm_ses>=alarm_ses_araligi){
+      alarm_ses=simdiki_zaman;
+      tone(buzzer,1500,150);
+    }
+  }
+  else{
+    renk_sec(0,255,0);
+  }
+  }
+}
+</code></pre>
         </div>
 
         <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
