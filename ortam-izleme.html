@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Çok Sensörlü Ortam İzleme | Proje Detayı</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .code-container { background-color: #272822; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; max-height: 400px; font-family: 'Courier New', monospace; font-size: 13px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="scroll-reveal">Çok Sensörlü IoT Ortam İzleme</h1>
+        
+        <h3 class="scroll-reveal">Proje Amacı</h3>
+        <p class="scroll-reveal">Çoklu sensörden gelen verileri (DHT22, LDR, MQ-135) eşzamanlı işleyen ve non-blocking mimari ile çalışan bir izleme sistemidir.</p>
+
+        <h3 class="scroll-reveal">Pin Bağlantıları</h3>
+        <ul class="scroll-reveal">
+            <li>DHT22: <b>D2</b> | LDR: <b>A0</b> | MQ-135: <b>A1</b></li>
+            <li>RGB LED: <b>D9(K), D10(Y), D11(M)</b> | Buzzer: <b>D6</b></li>
+            <li>OLED Ekran: <b>I2C (SDA/SCL)</b></li>
+        </ul>
+
+        <h3 class="scroll-reveal">Kaynak Kod</h3>
+        <div class="scroll-reveal code-container">
+<pre><code>#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <DHT.h>
+
+#define mq_135 A1
+#define dht_22 2
+#define dht_tipi DHT22
+#define ldr A0
+#define kirmizi 9
+#define yesil 10
+#define mavi 11
+#define buzzer 6
+
+// ... (Kodunun devamını buraya ekle) ...
+</code></pre>
+        </div>
+
+        <a href="ogrenci-setleri.html" class="scroll-reveal">← Geri Dön</a>
+    </div>
+</body>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+    });
+    document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+</script>
+</html>
