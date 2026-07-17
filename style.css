@@ -62,3 +62,7 @@ img {
     margin: 30px auto;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
+/* TEST: Sayfa kırmızı olursa CSS bağlanmış demektir */
+body {
+    border: 5px solid red !important;
+}
