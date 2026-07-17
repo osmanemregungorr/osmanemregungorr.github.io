@@ -22,6 +22,18 @@ body {
     padding: 80px 20px;
 }
 
+/* Animasyon: Yazılar yavaşça yukarı süzülür */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 h1 { font-size: 48px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 20px; }
 h3 { font-size: 24px; font-weight: 600; color: var(--text-color); margin-top: 40px; }
 p { font-size: 19px; color: var(--secondary-text); line-height: 1.6; }

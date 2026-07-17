@@ -7,32 +7,31 @@
 </head>
 <body>
     <div class="container">
-        <h1>Ultrasonik Mesafe Takibi - ARDUİNO UNO</h1>
+        <h1 class="scroll-reveal">Ultrasonik Mesafe Takibi - ARDUİNO UNO</h1>
         
-        <h3>Blok Şeması</h3>
-        <img src="ultrasonik_alarm_blok_semasi.png" alt="Blok Şeması">
+        <h3 class="scroll-reveal">Blok Şeması</h3>
+        <div class="scroll-reveal"><img src="ultrasonik_alarm_blok_semasi.png" alt="Blok Şeması"></div>
 
-        <h3>Bacak Bağlantı Şeması</h3>
-        <img src="arduino_pinout_semasi.png" alt="Bacak Bağlantı Şeması">
+        <h3 class="scroll-reveal">Bacak Bağlantı Şeması</h3>
+        <div class="scroll-reveal"><img src="arduino_pinout_semasi.png" alt="Bacak Bağlantı Şeması"></div>
 
-        <h3>Projenin Amacı</h3>
-        <p>Bu proje, ARDUİNO UNO üzerinden yapılmış ,sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan ve eşik değerine göre alarm veren bir mesafe ölçme sistemidir.</p>
+        <h3 class="scroll-reveal">Projenin Amacı</h3>
+        <p class="scroll-reveal">Bu proje, ARDUİNO UNO üzerinden yapılmış ,sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan ve eşik değerine göre alarm veren bir mesafe ölçme sistemidir.</p>
 
-        <h3>Nasıl Çalışır?</h3>
-        <ul>
+        <h3 class="scroll-reveal">Nasıl Çalışır?</h3>
+        <ul class="scroll-reveal">
             <li><strong>1. Tarama:</strong> HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar. Mesafeyi tarayarak potansiyel bir "tehdit" (yaklaşan el/nesne) arar.</li>
             <li><strong>2. Algılama:</strong> Ölçülen mesafe belirlenen bir eşiğin (30 cm) altına düştüğünde, sistem bunu algılar. Kırmızı LED yanar ve buzzer alarm sesi çalmaya başlar. Ayrıca mesafe ekranda bir bar ile anlık görülebilir.</li>
         </ul>
 
-        <h3>Öğretici Değer</h3>
-        <ul>
+        <h3 class="scroll-reveal">Öğretici Değer</h3>
+        <ul class="scroll-reveal">
             <li>Sensör senkronizasyonu: Bir sensörden gelen veri, işlenip bir OLED ekran sayesinde görsel bir hale getiriliyor.</li>
             <li>Basit optimizasyon algoritması: Hill-climbing, gerçek dünyada robotik ve yapay zekada kullanılan temel bir arama stratejisinin uygulamasıdır.</li>
         </ul>
 
-        <h3>Kod Bloğu</h3>
-        <pre><code>
-
+        <h3 class="scroll-reveal">Kod Bloğu</h3>
+        <pre class="scroll-reveal"><code>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -106,10 +105,21 @@ void loop() {
         delay(30);
     }
 }
-
         </code></pre>
 
-        <a href="ogrenci-setleri.html">← Listeye Dön</a>
+        <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
     </div>
 </body>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    });
+
+    const hiddenElements = document.querySelectorAll('.scroll-reveal');
+    hiddenElements.forEach((el) => observer.observe(el));
+</script>
 </html>
