@@ -7,13 +7,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Öğrenci Setleri</h1>
-        <p>Geliştirdiğim elektronik projeler:</p>
-        <ul>
+        <h1 class="scroll-reveal">Öğrenci Setleri</h1>
+        <p class="scroll-reveal">Geliştirdiğim elektronik projeler:</p>
+        <ul class="scroll-reveal">
             <li><a href="mesafe-olcum.html">1. Ultrasonik Mesafe Takibi:</a></li>
             <li><a href="#">2. Yakında Eklenecek...</a></li>
         </ul>
-        <a href="index.html">← Ana Sayfa</a>
+        <a href="index.html" class="scroll-reveal">← Ana Sayfa</a>
     </div>
 </body>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    });
+
+    const hiddenElements = document.querySelectorAll('.scroll-reveal');
+    hiddenElements.forEach((el) => observer.observe(el));
+</script>
 </html>
