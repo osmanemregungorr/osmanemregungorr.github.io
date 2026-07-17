@@ -1,8 +1,9 @@
+/* Genel Apple Estetiği */
 :root {
     --bg-color: #000000;
     --text-color: #f5f5f7;
-    --card-bg: #1c1c1e;
-    --accent: #2997ff; /* Apple mavisi */
+    --secondary-text: #86868b;
+    --accent-color: #2997ff;
 }
 
 body {
@@ -11,32 +12,34 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     padding: 0;
-    line-height: 1.5;
+    display: flex;
+    justify-content: center;
 }
 
 .container {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 0 20px;
+    max-width: 800px;
+    width: 100%;
+    padding: 100px 20px;
 }
 
-h1 { font-size: 56px; font-weight: 600; letter-spacing: -0.005em; text-align: center; margin-top: 80px; }
+/* Tipografi */
+h1 { font-size: 56px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 20px; }
+h3 { font-size: 28px; font-weight: 600; color: var(--secondary-text); margin-top: 50px; }
+p { font-size: 21px; color: var(--secondary-text); }
 
-/* Apple Kart Tasarımı */
-.project-card {
-    background: var(--card-bg);
-    padding: 60px;
-    border-radius: 30px;
-    margin-top: 40px;
-}
+/* Linkler ve Liste */
+a { color: var(--accent-color); text-decoration: none; font-size: 21px; }
+a:hover { text-decoration: underline; }
 
+ul { list-style: none; padding: 0; }
+li { margin-bottom: 20px; font-size: 21px; }
+
+/* Kod Bloğu (Koyu ve Şık) */
 pre {
-    background: #000;
-    border: 1px solid #333;
+    background: #1c1c1e;
     padding: 30px;
     border-radius: 20px;
+    color: #ffd60a; /* VS Code gibi canlı bir renk */
     overflow-x: auto;
+    font-family: 'SFMono-Regular', Consolas, monospace;
 }
-
-a { color: var(--accent); text-decoration: none; font-size: 18px; }
-a:hover { text-decoration: underline; }
