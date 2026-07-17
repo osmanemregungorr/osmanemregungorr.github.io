@@ -7,10 +7,27 @@
     <style>
         .cv-section { margin-bottom: 30px; }
         h4 { border-bottom: 2px solid #333; padding-bottom: 5px; }
+        /* Profil fotoğrafı için stil */
+        .profile-img {
+            width: 150px; 
+            height: 150px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 4px solid #333; 
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* Kopyalama engeli */
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Profil Fotoğrafı -->
+        <div class="scroll-reveal" style="text-align: center;">
+            <img src="profil.jpeg" alt="Osman Emre" class="profile-img">
+        </div>
+
         <h1 class="scroll-reveal">Osman Emre Güngör</h1>
         <p class="scroll-reveal"><b>Mekatronik Teknikeri</b> | İzmir, Türkiye</p>
 
@@ -21,16 +38,17 @@
 
         <div class="scroll-reveal cv-section">
             <h4>İŞ DENEYİMİ</h4>
-            <p><b>STAJYER - AKORD ELEKTRONİK</b> (02.2026 - 06.2026) | İzmir</p>
+            <p><b>STAJYER - AKORD ELEKTRONİK</b> (02.2026 - 06.2026) | İzmir[cite: 1]</p>
             <p><b>PROJE STAJYERİ - DEÜ YÖNETİM BİLİŞİM SİSTEMLERİ (YBS)</b> (13.07.2026 - 28.08.2026) | İzmir</p>
-            <p>Bölüm başkanlığı bünyesinde, yönetim bilişim sistemleri entegrasyonu ve dijital sistem geliştirme odaklı yapılandırılmış proje çalışmaları (ARDUİNO,ESP32,RASPBERRY Pİ3)gerçekleştirildi.</p>
+            <p>Bölüm başkanlığı bünyesinde, yönetim bilişim sistemleri entegrasyonu ve dijital sistem geliştirme odaklı yapılandırılmış proje çalışmaları (ARDUİNO, ESP32, RASPBERRY Pİ3) gerçekleştirildi.</p>
         </div>
 
         <div class="scroll-reveal cv-section">
-            <h4>BECERİLER</h4>
+            <h4>BECERİLER & DİLLER</h4>
             <ul>
-                <li><b>Diller:</b> Embedded C, C++, MicroPython, Python</li>
-                <li><b>Donanım:</b> STM32, ESP32, Arduino UNO, NodeMCU</li>
+                <li><b>Diller:</b> Embedded C, C++, MicroPython, Python[cite: 1]</li>
+                <li><b>İngilizce:</b> B2[cite: 1]</li>
+                <li><b>Donanım:</b> STM32, ESP32, Arduino UNO, NodeMCU[cite: 1]</li>
                 <li><b>Ortamlar:</b> Keil uVision, VS Code, Thonny, Arduino IDE, STM32CubeMX[cite: 1]</li>
                 <li><b>Protokoller:</b> IoT, Wi-Fi/Bluetooth, UART, I2C, SPI, Photoshop[cite: 1]</li>
             </ul>
@@ -48,4 +66,11 @@
         <a href="index.html" class="scroll-reveal">← Ana Sayfaya Dön</a>
     </div>
 </body>
+<script>
+    // Sağ tık ve kopyalama engeli
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'u' || e.key === 'U')) e.preventDefault();
+    });
+</script>
 </html>
