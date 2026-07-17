@@ -5,7 +5,6 @@
     <title>Osman Emre - Portfolyo</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Profil fotoğrafını yuvarlak ve sabit boyutlu yapan stil */
         .profile-img {
             width: 200px; 
             height: 200px; 
@@ -15,18 +14,12 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        /* Kod kutusu için stil */
-        .code-container {
-            background-color: #272822;
-            color: #f8f8f2;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            max-height: 400px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 13px;
-            line-height: 1.5;
-            margin: 20px 0;
+        .project-desc {
+            background: #f4f4f4;
+            padding: 15px;
+            border-left: 5px solid #333;
+            margin-bottom: 20px;
+            font-size: 0.95em;
         }
     </style>
 </head>
@@ -39,12 +32,20 @@
         
         <h1 class="scroll-reveal">Merhaba, ben Osman Emre</h1>
         
-        <p class="scroll-reveal">Ege Üniversitesi Meslek Yüksekokulu Mekatronik programı ikinci sınıf öğrencisi ve mezun adayıyım. Akademik eğitimim ve küçüklüğümden beri yürüttüğüm bireysel çalışmalar kapsamında gömülü sistemler (Embedded Systems) ve Nesnelerin İnterneti (IoT) alanlarında uzmanlaşmaya odaklandım. STM32, ESP32 ve Arduino mimarilerinde mikrodenetleyici programlama ile C/ C++ ve Python dillerini kullanarak donanım kontrolü alanlarında pratik proje deneyimine sahibim. Analitik düşünme becerisi gelişmiş, sürekli öğrenmeye ve gelişime açık bir Mekatronik Teknikeri olarak; gömülü yazılım (Embedded Software) alanında değer üretmeyi ve bu alandaki yetkinliklerimi profesyonel projelerle ileriye taşımayı hedeflemekteyim.</p>
+        <p class="scroll-reveal">Ege Üniversitesi Meslek Yüksekokulu Mekatronik programı ikinci sınıf öğrencisi ve mezun adayıyım. Akademik eğitimim ve küçüklüğümden beri yürüttüğüm bireysel çalışmalar kapsamında gömülü sistemler ve Nesnelerin İnterneti (IoT) alanlarında uzmanlaşmaya odaklandım. STM32, ESP32 ve Arduino mimarilerinde mikrodenetleyici programlama ile C/ C++ ve Python dillerini kullanarak donanım kontrolü alanlarında pratik proje deneyimine sahibim.</p>
+        
         <ul class="scroll-reveal" style="list-style-type: none; padding: 0;">
-    <li><a href="hakkimda.html">📄 Hakkımda & Detaylı CV</a></li>
-</ul>
-<h3 class="scroll-reveal">PROJELERİM:</h3>
+            <li><a href="hakkimda.html">📄 Hakkımda & Detaylı CV</a></li>
+        </ul>
+
         <h3 class="scroll-reveal">PROJELERİM:</h3>
+        
+        <!-- Web Sitesi Proje Açıklaması -->
+        <div class="scroll-reveal project-desc">
+            <p><b>PORTFOLYO WEB SİTESİ (Kişisel Proje)</b></p>
+            <p>Kendi dijital özgeçmişimi sergilemek amacıyla HTML, CSS ve JavaScript kullanarak geliştirdiğim kişisel portfolyo web sitesi. Bu projede; duyarlı tasarım, kullanıcı deneyimi optimizasyonu, içerik koruma (sağ tık ve kopyalama engelleme) ve dinamik dosya indirme sistemleri entegre edilmiştir. Modern ve minimalist bir arayüz ile projelerimi ve teknik yetkinliklerimi profesyonel bir platformda sunmayı hedefledim.</p>
+        </div>
+
         <ul class="scroll-reveal">
             <li><a href="alerji-bitki-kabini.html">Alerji Bitki Kabini (ESP32&IoT) 🌿 </a></li>
             <li><a href="ogrenci-setleri.html">Öğrenci Setleri 📚 (Proje Arşivi)</a></li>
