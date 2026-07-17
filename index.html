@@ -1,68 +1,86 @@
 <!DOCTYPE html>
-<div class="lang-switch" style="text-align: right; padding: 10px;">
-    <button onclick="setLanguage('tr')">TR</button>
-    <button onclick="setLanguage('en')">EN</button>
-</div>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Osman Emre - Portfolyo</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .profile-img {
-            width: 200px; 
-            height: 200px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            border: 4px solid #333; 
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .project-desc {
-            background: #f4f4f4;
-            padding: 15px;
-            border-left: 5px solid #333;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-        }
+        .lang-switch { text-align: right; margin-bottom: 20px; }
+        .lang-switch button { background: #333; border: 1px solid #fff; color: #fff; cursor: pointer; padding: 5px 10px; margin-left: 5px; }
+        .profile-img { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid #333; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .scroll-reveal { opacity: 0; filter: blur(5px); transform: translateY(30px); transition: all 1s; }
+        .scroll-reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Profil Fotoğrafı -->
+        <!-- Dil Seçimi -->
+        <div class="lang-switch">
+            <button onclick="setLanguage('tr')">TR</button>
+            <button onclick="setLanguage('en')">EN</button>
+        </div>
+
         <div class="scroll-reveal" style="text-align: center;">
             <img src="profil.jpeg" alt="Osman Emre" class="profile-img">
         </div>
         
-        <h1 class="scroll-reveal">Merhaba, ben Osman Emre</h1>
+        <h1 class="scroll-reveal i18n" data-key="merhaba">Merhaba, ben Osman Emre</h1>
         
-        <p class="scroll-reveal">Ege Üniversitesi Meslek Yüksekokulu Mekatronik programı ikinci sınıf öğrencisi ve mezun adayıyım. Akademik eğitimim ve küçüklüğümden beri yürüttüğüm bireysel çalışmalar kapsamında gömülü sistemler ve Nesnelerin İnterneti (IoT) alanlarında uzmanlaşmaya odaklandım. STM32, ESP32 ve Arduino mimarilerinde mikrodenetleyici programlama ile C/ C++ ve Python dillerini kullanarak donanım kontrolü alanlarında pratik proje deneyimine sahibim.</p>
+        <p class="scroll-reveal i18n" data-key="hakkimda">Ege Üniversitesi Mekatronik programı öğrencisiyim. Gömülü sistemler ve IoT alanlarında uzmanlaşmaya odaklandım. STM32, ESP32 ve Arduino üzerinde C/C++ ve Python projeleri geliştiriyorum.</p>
         
         <ul class="scroll-reveal" style="list-style-type: none; padding: 0;">
-            <li><a href="cv.html">📄 Hakkımda & Detaylı CV</a></li>
+            <li><a href="cv.html" class="i18n" data-key="cv_link">📄 Hakkımda & Detaylı CV</a></li>
         </ul>
 
-        <!-- Web Sitesi Proje Açıklaması -->
-<h3 class="scroll-reveal">PROJELERİM:</h3>
+        <h3 class="scroll-reveal i18n" data-key="projeler_baslik">PROJELERİM:</h3>
         <ul class="scroll-reveal">
             <li><a href="portfolyo.html">Portfolyo Web Sitesi (Bu Site) 💻</a></li>
-            <li><a href="alerji-bitki-kabini.html">Alerji Bitki Kabini (ESP32&IoT) 🌿 </a></li>
-            <li><a href="ogrenci-setleri.html">Öğrenci Setleri 📚 (DEÜ YBS Stajı Projelerim)</a></li>
+            <li><a href="alerji-bitki-kabini.html" class="i18n" data-key="proje1">Alerji Bitki Kabini (ESP32&IoT) 🌿</a></li>
+            <li><a href="ogrenci-setleri.html" class="i18n" data-key="proje2">Öğrenci Setleri 📚 (DEÜ YBS Stajı)</a></li>
         </ul>
 
-        <a href="https://github.com/osmanemregungorr" target="_blank" class="scroll-reveal">GitHub Profilim 👤→</a>
+        <a href="https://github.com/osmanemregungorr" target="_blank" class="scroll-reveal i18n" data-key="github">GitHub Profilim 👤→</a>
     </div>
-</body>
-<script>
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
-    });
 
-    const hiddenElements = document.querySelectorAll('.scroll-reveal');
-    hiddenElements.forEach((el) => observer.observe(el));
-</script>
+    <script>
+        const translations = {
+            "tr": {
+                "merhaba": "Merhaba, ben Osman Emre",
+                "hakkimda": "Ege Üniversitesi Mekatronik programı öğrencisiyim. Gömülü sistemler ve IoT alanlarında uzmanlaşmaya odaklandım. STM32, ESP32 ve Arduino üzerinde C/C++ ve Python projeleri geliştiriyorum.",
+                "cv_link": "📄 Hakkımda & Detaylı CV",
+                "projeler_baslik": "PROJELERİM:",
+                "proje1": "Alerji Bitki Kabini (ESP32&IoT) 🌿",
+                "proje2": "Öğrenci Setleri 📚 (DEÜ YBS Stajı)",
+                "github": "GitHub Profilim 👤→"
+            },
+            "en": {
+                "merhaba": "Hello, I'm Osman Emre",
+                "hakkimda": "I am a student at Ege University Mechatronics program. I focus on embedded systems and IoT. I develop C/C++ and Python projects on STM32, ESP32, and Arduino.",
+                "cv_link": "📄 About Me & Detailed CV",
+                "projeler_baslik": "MY PROJECTS:",
+                "proje1": "Allergy & Plant Isolation Chamber (ESP32&IoT) 🌿",
+                "proje2": "Student Kits 📚 (DEU MIS Internship)",
+                "github": "My GitHub Profile 👤→"
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('.i18n').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            localStorage.setItem('lang', lang);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(localStorage.getItem('lang') || 'tr');
+            document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+        });
+    </script>
+</body>
 </html>

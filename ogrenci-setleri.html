@@ -4,24 +4,77 @@
     <meta charset="UTF-8">   
     <title>Öğrenci Setleri</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .lang-switch { text-align: right; margin-bottom: 20px; }
+        .lang-switch button { background: #333; border: 1px solid #fff; color: #fff; cursor: pointer; padding: 5px 10px; margin-left: 5px; }
+        
+        .scroll-reveal {
+            opacity: 0;
+            filter: blur(5px);
+            transform: translateY(30px);
+            transition: all 1s;
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="scroll-reveal">Öğrenci Setleri</h1>
-        <p class="scroll-reveal">Bu kısımda DEÜ YBS stajımda geliştirdiğim elektronik projeler yer alıyor.:</p>
+        <!-- Dil Seçimi -->
+        <div class="lang-switch">
+            <button onclick="setLanguage('tr')">TR</button>
+            <button onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <h1 class="scroll-reveal i18n" data-key="baslik">Öğrenci Setleri</h1>
+        <p class="scroll-reveal i18n" data-key="aciklama">Bu kısımda DEÜ YBS stajımda geliştirdiğim elektronik projeler yer alıyor:</p>
         <ul class="scroll-reveal">
-            <li><a href="mesafe-olcum.html">1. Ultrasonik Mesafe Takibi 📏</a></li>
-            <li><a href="ortam-izleme.html">2. Çok Sensörlü Ortam İzleme Sistemi 🏠</a></li>
-            <li><a href="#">3. Yakında Eklenecek...</a></li>
+            <li><a href="mesafe-olcum.html">1. <span class="i18n" data-key="proje1">Ultrasonik Mesafe Takibi</span> 📏</a></li>
+            <li><a href="ortam-izleme.html">2. <span class="i18n" data-key="proje2">Çok Sensörlü Ortam İzleme Sistemi</span> 🏠</a></li>
+            <li><span class="i18n" data-key="proje3">3. Yakında Eklenecek...</span></li>
         </ul>
-        <a href="index.html" class="scroll-reveal">← Ana Sayfa</a>
+        <a href="index.html" class="scroll-reveal i18n" data-key="geri_don">← Ana Sayfa</a>
     </div>
+
+    <script>
+        const translations = {
+            "tr": {
+                "baslik": "Öğrenci Setleri",
+                "aciklama": "Bu kısımda DEÜ YBS stajımda geliştirdiğim elektronik projeler yer alıyor:",
+                "proje1": "Ultrasonik Mesafe Takibi",
+                "proje2": "Çok Sensörlü Ortam İzleme Sistemi",
+                "proje3": "3. Yakında Eklenecek...",
+                "geri_don": "← Ana Sayfa"
+            },
+            "en": {
+                "baslik": "Student Kits",
+                "aciklama": "In this section, you can find the electronics projects I developed during my DEU MIS internship:",
+                "proje1": "Ultrasonic Distance Tracking",
+                "proje2": "Multi-Sensor Environment Monitoring System",
+                "proje3": "3. Coming Soon...",
+                "geri_don": "← Home"
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('.i18n').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+            localStorage.setItem('lang', lang);
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(localStorage.getItem('lang') || 'tr');
+            document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+        });
+    </script>
 </body>
-<script>
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-    });
-    const hiddenElements = document.querySelectorAll('.scroll-reveal');
-    hiddenElements.forEach((el) => observer.observe(el));
-</script>
 </html>

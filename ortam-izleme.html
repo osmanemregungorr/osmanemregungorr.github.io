@@ -5,9 +5,27 @@
     <title>Çok Sensörlü Ortam İzleme 🏠| Proje Detayı</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .code-container { background-color: #272822; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; max-height: 400px; font-family: 'Courier New', monospace; font-size: 13px; margin: 20px 0; }
-        .scroll-reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
-        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        .code-container { 
+            background-color: #272822; 
+            color: #f8f8f2; 
+            padding: 20px; 
+            border-radius: 8px; 
+            overflow-x: auto; 
+            max-height: 400px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 13px; 
+            margin: 20px 0; 
+        }
+        /* Kayma Animasyonu */
+        .scroll-reveal { 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: all 1s ease-out; 
+        }
+        .scroll-reveal.active { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
         img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
     </style>
 </head>
@@ -43,7 +61,7 @@
             <pre><code>#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <DHT.h>//D2 PİNİNİ KÜTÜPHANE İLE HEM OUTPUT HEM DE İNPUT YAPAR.
+#include <DHT.h>
 
 #define mq_135 A1
 #define dht_22 2
@@ -89,11 +107,9 @@ analogWrite(mavi,m);
 void setup() {
   dht.begin();
   Serial.begin(9600);
-
-  display.clearDisplay(); // Ekran hafızasını temizleme
-  display.setTextColor(SSD1306_WHITE); // Yazı rengini beyaz yapma
-  display.setTextSize(1); // Varsayılan yazı boyutunu 1 yapma
-
+  display.clearDisplay(); 
+  display.setTextColor(SSD1306_WHITE); 
+  display.setTextSize(1); 
   pinMode(kirmizi,OUTPUT);
   pinMode(mavi,OUTPUT);
   pinMode(yesil,OUTPUT);
@@ -105,43 +121,33 @@ void loop() {
   if(simdiki_zaman-son_ldr_okumasi>=ldr_okuma_araligi){
     son_ldr_okumasi=simdiki_zaman;
     anlik_isik=map(analogRead(ldr),0,1023,0,100);
-    Serial.println("Alık Işık:");
-    Serial.print(anlik_isik);
   }
   if(simdiki_zaman-son_dht_okumasi>=dht_okuma_araligi){
     float s=dht.readTemperature();
     float n=dht.readHumidity();
     son_dht_okumasi=simdiki_zaman;
-    if(s==s&&n==n){
+    if(s==s && n==n){
       sensor_hata=false;
       sicaklik=s;
       nem=n;
-      Serial.print("Sıcaklık: ");
-      Serial.println(s);
-      Serial.print("Nem: ");
-      Serial.println(n);
-    }
-    else{
+    } else {
       sensor_hata=true;
     }
   }
   if(sensor_hata==true){
     renk_sec(0,0,255);
-  }
-  else{
-    if((max_nem >nem || nem<min_nem)||(max_sicaklik>sicaklik || sicaklik<min_sicaklik)){
-    renk_sec(255,0,0);
-    if(simdiki_zaman-alarm_ses>=alarm_ses_araligi){
-      alarm_ses=simdiki_zaman;
-      tone(buzzer,1500,150);
+  } else {
+    if((max_nem > nem || nem < min_nem)||(max_sicaklik > sicaklik || sicaklik < min_sicaklik)){
+      renk_sec(255,0,0);
+      if(simdiki_zaman-alarm_ses>=alarm_ses_araligi){
+        alarm_ses=simdiki_zaman;
+        tone(buzzer,1500,150);
+      }
+    } else {
+      renk_sec(0,255,0);
     }
   }
-  else{
-    renk_sec(0,255,0);
-  }
-  }
-}
-</code></pre>
+}</code></pre>
         </div>
 
         <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
@@ -149,7 +155,11 @@ void loop() {
 </body>
 <script>
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        entries.forEach(entry => { 
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active'); 
+            }
+        });
     });
     document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
 </script>
