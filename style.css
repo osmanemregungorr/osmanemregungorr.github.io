@@ -43,8 +43,10 @@ pre {
 
 img {
     display: block;
-    max-width: 100%;
+    max-width: 600px; /* Görselin asla 600 pikselden geniş olmamasını sağlar */
+    width: 100%;      /* Mobilde ekranı doldurur, bilgisayarda 600px'de durur */
+    height: auto;     /* En-boy oranını korur, bozulmaz */
     border-radius: 20px;
-    margin: 30px 0;
+    margin: 30px auto; /* Ortalar */
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
