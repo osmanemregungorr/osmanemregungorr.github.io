@@ -24,13 +24,39 @@
         <h1 class="scroll-reveal">Alerji ve Bitki İzolasyon Kabini</h1>
         
         <h3 class="scroll-reveal">Giriş ve Proje Amacı</h3>
-        <p class="scroll-reveal">Bitkilerin en sağlıklı şekilde gelişmesini sağlarken, kullanıcı sağlığını alerjen korumasıyla ön planda tutan, ESP32 tabanlı otonom bir izolasyon kabinidir[cite: 2].</p>
+        <p class="scroll-reveal">Bitkilerin en sağlıklı şekilde gelişmesini sağlarken, kullanıcı sağlığını alerjen korumasıyla ön planda tutan, ESP32 tabanlı otonom bir izolasyon kabinidir[cite: 2]. Sistem; sıcaklık, nem, hava kalitesi (polen) ve ışık şiddetini yüksek doğrulukla kontrol eder[cite: 2].</p>
+
+        <h3 class="scroll-reveal">Literatür Taraması ve Özgün Değer</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Mevcut Durum:</strong> Piyasadaki sistemler çoğunlukla manuel veya temel zamanlayıcılıdır[cite: 2].</li>
+            <li><strong>Özgün Değer:</strong> Projemiz, ESP32'nin işlem gücü ile sensör verilerini işleyerek "Hibrit Otomasyon" sağlar[cite: 2].</li>
+            <li><strong>Güvenlik:</strong> Erişim kontrollü yetiştirme alanı konsepti ile fiziksel güvenlik ve IoT entegrasyonu sunar[cite: 2].</li>
+        </ul>
+
+        <h3 class="scroll-reveal">Proje Planı</h3>
+        <p class="scroll-reveal">Literatür taraması, devre tasarımı, yazılım geliştirme, mekanik tasarım, birleştirme ve test süreçleri toplam 1 yarıyılda tamamlanmıştır[cite: 2].</p>
+
+        <h3 class="scroll-reveal">Blok Şeması</h3>
+        <div class="scroll-reveal"><img src="esp32_kabin_blok_semasi.png" alt="Blok Şeması"></div>
+
+        <h3 class="scroll-reveal">Malzeme Listesi</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Mikrodenetleyici:</strong> ESP32[cite: 2].</li>
+            <li><strong>Sensörler:</strong> Kapasitif toprak nem, Sharp GP2Y10 toz, GY302 (BH1750) ışık, DTH22 ısı ve nem[cite: 2].</li>
+            <li><strong>Aktüatörler:</strong> Salyangoz fan, dalgıç su pompası, ultrasonik nem yapıcı, tam spektrum LED, Peltier soğutucu[cite: 2].</li>
+            <li><strong>Kontrol:</strong> 4 kanal röle modülleri, LM2596 voltaj regülatörü[cite: 2].</li>
+        </ul>
+
+        <h3 class="scroll-reveal">Teknik Detaylar ve Sensör Mantığı</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Hava Kalitesi:</strong> Sharp GP2Y10 ile partikül tespiti yapılarak HEPA filtre ve fanlar üzerinden sterilizasyon sağlanır[cite: 2].</li>
+            <li><strong>Mikro-İklim:</strong> Peltier soğutucu ve ultrasonik nem yapıcı ile ideal tropikal ortam simülasyonu gerçekleştirilir[cite: 2].</li>
+            <li><strong>Kontrol Algoritması:</strong> Sistem; sıcaklık >28.5°C, nem <%35 ve polen >0.35mg/m³ gibi eşik değerlerine göre karar verir[cite: 2].</li>
+        </ul>
 
         <h3 class="scroll-reveal">Yazılım ve Kontrol Algoritması</h3>
-        <p class="scroll-reveal">Sistem, ESP32 mikrodenetleyici üzerinde C++ dili ile geliştirilmiştir. Blynk IoT entegrasyonu ile otonom fan, sulama ve LED yönetimi sağlar.</p>
-
         <div class="scroll-reveal code-container">
-<pre><code>#define BLYNK_TEMPLATE_ID "TMPL6pvXfeof3"
+            <pre><code>(#define BLYNK_TEMPLATE_ID "TMPL6pvXfeof3"
 #define BLYNK_TEMPLATE_NAME "kabin"
 #define BLYNK_AUTH_TOKEN "lyo_ne-9qRpH9cUFaHhfMgutMxLFhH3c"
 #define BLYNK_PRINT Serial
@@ -43,6 +69,7 @@
 #include <DHT.h>
 #include <BH1750.h>
 
+// -------- PIN TANIMLAMALARI --------
 #define DHTPIN 27
 #define SALYANGOZ_FAN 4
 #define TEKLI_FAN 15
@@ -60,6 +87,7 @@ BlynkTimer timer;
 char ssid[] = "Osman";
 char pass[] = "gozgozgoztepe";
 
+// -------- DURUMLAR --------
 bool turboMode = false;
 bool pompaBlynk = false;
 bool manualLed = false;
@@ -67,10 +95,12 @@ bool manualLed = false;
 #define AC LOW
 #define KAPAT HIGH
 
+// -------- BUTON DEBOUNCE --------
 bool sonButonDurumu = HIGH;
 unsigned long sonDebounceZamani = 0;
 const unsigned long debounceGecikmesi = 50;
 
+// Blynk Kontrolleri
 BLYNK_WRITE(V10) { manualLed = param.asInt(); }
 BLYNK_WRITE(V11) { pompaBlynk = param.asInt(); }
 BLYNK_WRITE(V12) { turboMode = param.asInt(); }
@@ -92,11 +122,18 @@ void verileriGonder() {
 
 void butonKontrol() {
   bool okunanDurum = digitalRead(BUTTON_PIN);
-  if (okunanDurum != sonButonDurumu) { sonDebounceZamani = millis(); }
+
+  if (okunanDurum != sonButonDurumu) {
+    sonDebounceZamani = millis();
+  }
+
   if ((millis() - sonDebounceZamani) > debounceGecikmesi) {
+    // Buton basılı (INPUT_PULLUP -> basılı = LOW) ve önceki durumdan farklıysa
     if (okunanDurum == LOW && sonButonDurumu == HIGH) {
       manualLed = !manualLed;
-      if (Blynk.connected()) { Blynk.virtualWrite(V10, manualLed); }
+      if (Blynk.connected()) {
+        Blynk.virtualWrite(V10, manualLed);
+      }
     }
   }
   sonButonDurumu = okunanDurum;
@@ -106,12 +143,33 @@ void oledGuncelle(float t, float h, int nemYuzde, bool fanAcik, bool pompaAcik, 
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0, 0); display.print("Sicaklik: "); display.print(t, 1); display.println(" C");
-  display.setCursor(0, 12); display.print("Nem: "); display.print(h, 1); display.println(" %");
-  display.setCursor(0, 24); display.print("Toprak: "); display.print(nemYuzde); display.println(" %");
+
+  display.setCursor(0, 0);
+  display.print("Sicaklik: ");
+  display.print(t, 1);
+  display.println(" C");
+
+  display.setCursor(0, 12);
+  display.print("Nem: ");
+  display.print(h, 1);
+  display.println(" %");
+
+  display.setCursor(0, 24);
+  display.print("Toprak: ");
+  display.print(nemYuzde);
+  display.println(" %");
+
   display.drawLine(0, 36, 127, 36, SSD1306_WHITE);
-  display.setCursor(0, 42); display.print("Fan: "); display.println(fanAcik ? "ACIK" : "KAPALI");
-  display.setCursor(0, 52); display.print("Pompa: "); display.print(pompaAcik ? "ACIK " : "KAPALI "); display.println(ledAcik ? "LED:ON" : "LED:OFF");
+
+  display.setCursor(0, 42);
+  display.print("Fan: ");
+  display.println(fanAcik ? "ACIK" : "KAPALI");
+
+  display.setCursor(0, 52);
+  display.print("Pompa: ");
+  display.print(pompaAcik ? "ACIK " : "KAPALI ");
+  display.println(ledAcik ? "LED:ON" : "LED:OFF");
+
   display.display();
 }
 
@@ -120,23 +178,32 @@ void setup() {
   Wire.begin();
   dht.begin();
   lightMeter.begin(BH1750::CONTINUOUS_HIGH_RES_MODE);
+
   lcd.begin();
   lcd.backlight();
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) Serial.println("OLED baslatilamadi");
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("OLED baslatilamadi");
+  }
   display.clearDisplay();
   display.display();
+
   pinMode(SALYANGOZ_FAN, OUTPUT);
   pinMode(TEKLI_FAN, OUTPUT);
   pinMode(GROW_RELAY, OUTPUT);
   pinMode(POMPA_RELAY, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  // Başlangıç Ayarları (Her şey Kapalı)
   digitalWrite(SALYANGOZ_FAN, KAPAT);
   digitalWrite(TEKLI_FAN, KAPAT);
   digitalWrite(GROW_RELAY, KAPAT);
   digitalWrite(POMPA_RELAY, KAPAT);
+
   lcd.print("WiFi Baglaniyor");
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass, "blynk.cloud", 80);
   timer.setInterval(3000L, verileriGonder);
+
   lcd.clear();
   lcd.print("CORESTOFF v20.0");
 }
@@ -145,13 +212,18 @@ void loop() {
   Blynk.run();
   timer.run();
   butonKontrol();
+
   float t = dht.readTemperature();
   float h = dht.readHumidity();
   float lux = lightMeter.readLightLevel();
   int nemRaw = analogRead(TOPRAK_NEM_PIN);
   int nemYuzde = constrain(map(nemRaw, 4095, 1500, 0, 100), 0, 100);
+
+  // 1. LED KONTROLÜ
   bool ledAcik = (lux < 50.0 || manualLed);
   digitalWrite(GROW_RELAY, ledAcik ? AC : KAPAT);
+
+  // 2. FAN KONTROLÜ
   bool fanAcik;
   if (turboMode || t > 28.5) {
     digitalWrite(SALYANGOZ_FAN, AC); digitalWrite(TEKLI_FAN, AC);
@@ -162,18 +234,31 @@ void loop() {
   } else {
     fanAcik = (digitalRead(SALYANGOZ_FAN) == AC);
   }
+
+  // 3. POMPA KONTROLÜ (Su Seviyesi Devre Dışı)
+  // Kural: Sadece Toprak kuruysa %35 VEYA telefondan (V11) basılmışsa çalış
   bool pompaAcik = (nemYuzde < 35 || pompaBlynk);
   digitalWrite(POMPA_RELAY, pompaAcik ? AC : KAPAT);
-  lcd.setCursor(0, 0); lcd.print("Lux:"); lcd.print((int)lux); lcd.print(Blynk.connected() ? " B:ON" : " B:OFF");
-  lcd.setCursor(0, 1); lcd.print("Toprak Nem:%"); lcd.print(nemYuzde);
+
+  // LCD GÜNCELLEME
+  lcd.setCursor(0, 0);
+  lcd.print("Lux:"); lcd.print((int)lux);
+  lcd.print(Blynk.connected() ? " B:ON" : " B:OFF");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Toprak Nem:%"); lcd.print(nemYuzde);
+
+  // OLED GÜNCELLEME
   oledGuncelle(t, h, nemYuzde, fanAcik, pompaAcik, ledAcik);
-}</code></pre>
+})</code></pre>
         </div>
 
-        <h3 class="scroll-reveal">Blok Şeması</h3>
-        <div class="scroll-reveal"><img src="esp32_kabin_blok_semasi.png" alt="Blok Şeması"></div>
-        
-        <!-- Teknik Rapor PDF Bağlantısı -->
+        <h3 class="scroll-reveal">Sonuç ve Gelecek Geliştirmeler</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Başarı:</strong> Hem bitki sağlığı hem de alerji hastaları için güvenli, uzaktan izlenebilir bir IoT alanı başarıyla simüle edilmiştir[cite: 2].</li>
+            <li><strong>Vizyon:</strong> Makine öğrenmesi ile "tahminleyici sulama", ESP32-CAM ile bitki hastalık tespiti ve peristaltik pompalarla otomatik gübreleme sisteme eklenebilir[cite: 2].</li>
+        </ul>
+
         <h3 class="scroll-reveal">Teknik Rapor</h3>
         <div class="scroll-reveal" style="margin: 20px 0;">
             <a href="proje-teknik-rapor.pdf" target="_blank" style="padding: 12px 24px; background-color: #333; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
