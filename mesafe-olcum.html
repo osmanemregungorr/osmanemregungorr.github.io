@@ -8,7 +8,6 @@
         .lang-switch { text-align: right; margin-bottom: 20px; }
         .lang-switch button { background: #333; border: 1px solid #fff; color: #fff; cursor: pointer; padding: 5px 10px; margin-left: 5px; }
         .code-container { background-color: #272822; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 13px; margin: 20px 0; }
-        
         .scroll-reveal { opacity: 0; filter: blur(5px); transform: translateY(30px); transition: all 1s; }
         .scroll-reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
     </style>
@@ -33,13 +32,85 @@
 
         <h3 class="scroll-reveal i18n" data-key="nasil_baslik">Nasıl Çalışır?</h3>
         <ul class="scroll-reveal">
-            <li><strong class="i18n" data-key="adim1">1. Tarama:</strong> <span class="i18n" data-key="adim1_metin">HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar.</span></li>
-            <li><strong class="i18n" data-key="adim2">2. Algılama:</strong> <span class="i18n" data-key="adim2_metin">Ölçülen mesafe belirlenen bir eşiğin (30 cm) altına düştüğünde, sistem bunu algılar. Kırmızı LED yanar ve buzzer çalar.</span></li>
+            <li><strong>1. Tarama:</strong> HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar.</li>
+            <li><strong>2. Algılama:</strong> Ölçülen mesafe 30 cm altına düştüğünde sistem alarm verir.</li>
         </ul>
 
         <h3 class="scroll-reveal i18n" data-key="kod_baslik">Kod Bloğu</h3>
         <div class="scroll-reveal code-container">
-            <pre><code>(Kod bloğun buraya eklenecek...)</code></pre>
+<pre><code>#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+#define ekran_genislik 128
+#define ekran_yukseklik 64
+#define ekran_reset -1
+Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
+
+#define kirmizi_led 7
+#define yesil_led 6
+#define buzzer 8
+#define trig_pin 9
+#define echo_pin 10
+#define mesafe_esigi 30
+#define tolerans 250
+
+long mesafe_olc(){
+    digitalWrite(trig_pin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig_pin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig_pin, LOW);
+    long sure = pulseIn(echo_pin, HIGH, 30000);
+    return (sure * 0.034) / 2;
+}
+
+bool alarm_aktif = false;
+unsigned long son_tarama = 0;
+
+void setup() {
+    pinMode(kirmizi_led, OUTPUT);
+    pinMode(yesil_led, OUTPUT);
+    pinMode(buzzer, OUTPUT);
+    pinMode(echo_pin, INPUT);
+    pinMode(trig_pin, OUTPUT);
+    Serial.begin(9600);
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) for(;;);
+    display.clearDisplay();
+    display.setTextColor(SSD1306_WHITE);
+}
+
+void loop() {
+    long mesafe = mesafe_olc();
+    display.clearDisplay();
+    int sinirli_mesafe = constrain(mesafe, 0, 180);
+    int bar_genisligi = (sinirli_mesafe <= 30) ? map(sinirli_mesafe, 0, 30, 122, 61) : map(sinirli_mesafe, 30, 180, 61, 0);
+    
+    display.setTextSize(1);
+    display.setCursor(0, 5);
+    display.println("Mesafe:");
+    display.print(mesafe > 180 ? "> 180cm" : (String)mesafe + " cm");
+    
+    display.drawRect(2, 52, 124, 10, SSD1306_WHITE);
+    display.fillRect(3, 53, bar_genisligi, 8, SSD1306_WHITE);
+    display.display();
+
+    if(mesafe < mesafe_esigi && mesafe >= 0){
+        son_tarama = millis();
+        if(!alarm_aktif){ alarm_aktif = true; digitalWrite(yesil_led, LOW); }
+        digitalWrite(kirmizi_led, HIGH);
+        tone(buzzer, 1000);
+        delay(50);
+    } else {
+        if(alarm_aktif && (millis() - son_tarama > tolerans)){
+            alarm_aktif = false;
+            digitalWrite(kirmizi_led, LOW);
+            digitalWrite(yesil_led, HIGH);
+            noTone(buzzer);
+        }
+        delay(30);
+    }
+}</code></pre>
         </div>
 
         <a href="ogrenci-setleri.html" class="scroll-reveal i18n" data-key="geri_don">← Listeye Dön</a>
@@ -47,36 +118,9 @@
 
     <script>
         const translations = {
-            "tr": {
-                "baslik": "Ultrasonik Mesafe Takibi - ARDUİNO UNO",
-                "blok_semasi": "Blok Şeması",
-                "baglanti": "Bacak Bağlantı Şeması",
-                "amac_baslik": "Projenin Amacı",
-                "amac_metin": "Bu proje, ARDUİNO UNO üzerinden yapılmış, sensör verisini işleyerek görsel bir arayüz üzerinden anlık mesafe bilgisi sunan bir sistemdir.",
-                "nasil_baslik": "Nasıl Çalışır?",
-                "adim1": "1. Tarama:",
-                "adim1_metin": "HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar.",
-                "adim2": "2. Algılama:",
-                "adim2_metin": "Mesafe 30 cm altına düştüğünde sistem alarm verir.",
-                "kod_baslik": "Kod Bloğu",
-                "geri_don": "← Listeye Dön"
-            },
-            "en": {
-                "baslik": "Ultrasonic Distance Tracking - ARDUINO UNO",
-                "blok_semasi": "Block Diagram",
-                "baglanti": "Pinout Diagram",
-                "amac_baslik": "Project Objective",
-                "amac_metin": "This project, built on ARDUINO UNO, processes sensor data and provides real-time distance info via an OLED screen.",
-                "nasil_baslik": "How it Works?",
-                "adim1": "1. Scanning:",
-                "adim1_metin": "The HC-SR04 ultrasonic sensor continuously scans the distance.",
-                "adim2": "2. Detection:",
-                "adim2_metin": "When the distance drops below 30 cm, the system triggers an alarm.",
-                "kod_baslik": "Source Code",
-                "geri_don": "← Back to List"
-            }
+            "tr": { "baslik": "Ultrasonik Mesafe Takibi - ARDUİNO UNO", "blok_semasi": "Blok Şeması", "baglanti": "Bacak Bağlantı Şeması", "amac_baslik": "Projenin Amacı", "amac_metin": "Bu proje, ARDUİNO UNO üzerinden yapılmış, sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan bir sistemdir.", "nasil_baslik": "Nasıl Çalışır?", "kod_baslik": "Kod Bloğu", "geri_don": "← Listeye Dön" },
+            "en": { "baslik": "Ultrasonic Distance Tracking - ARDUINO UNO", "blok_semasi": "Block Diagram", "baglanti": "Pinout Diagram", "amac_baslik": "Project Objective", "amac_metin": "This project, built on ARDUINO UNO, processes sensor data and provides real-time distance info via an OLED screen.", "nasil_baslik": "How it Works?", "kod_baslik": "Source Code", "geri_don": "← Back to List" }
         };
-
         function setLanguage(lang) {
             document.querySelectorAll('.i18n').forEach(el => {
                 const key = el.getAttribute('data-key');
@@ -84,11 +128,9 @@
             });
             localStorage.setItem('lang', lang);
         }
-
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         });
-
         document.addEventListener('DOMContentLoaded', () => {
             setLanguage(localStorage.getItem('lang') || 'tr');
             document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
