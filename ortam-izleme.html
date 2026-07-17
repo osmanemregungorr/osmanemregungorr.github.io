@@ -8,132 +8,42 @@
         .code-container { background-color: #272822; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; max-height: 400px; font-family: 'Courier New', monospace; font-size: 13px; margin: 20px 0; }
         .scroll-reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="scroll-reveal">2. Ortam İzleme — Arduino Uno</h1>
+        <h1 class="scroll-reveal">2. Ortam İzleme — ARDUİNO UNO</h1>
         
+        <h3 class="scroll-reveal">Blok Şeması</h3>
+        <div class="scroll-reveal"><img src="gemini-svg.svg" alt="Blok Şeması"></div>
+
+        <h3 class="scroll-reveal">Bacak Bağlantı Şeması</h3>
+        <div class="scroll-reveal"><img src="gemini-svg-2.svg" alt="Bacak Bağlantı Şeması"></div>
+
         <h3 class="scroll-reveal">Projenin Amacı</h3>
         <p class="scroll-reveal">Bu proje, çoklu sensörden gelen veriyi eşzamanlı olarak işleyip görselleştiren bir izleme sistemidir. Buradaki asıl teknik zorluk, birden fazla sensörü birbirini bloklamadan okuyabilmektir.</p>
 
         <h3 class="scroll-reveal">Nasıl Çalışır?</h3>
         <ul class="scroll-reveal">
-            <li><strong>1. Çoklu Sensör Okuma:</strong> DHT22 sıcaklık/nem sensörü, LDR ışık sensörü ve MQ-135 hava kalitesi sensöründen sürekli veri alınır. Her sensörün farklı okuma hızı ve gecikme gereksinimi vardır (örn: DHT22 için en az 2 saniye).</li>
-            <li><strong>2. Veri İşleme — Non-blocking Yaklaşım:</strong> Klasik `delay()` kullanımı sistemi durdurur. Bu projede <code>millis()</code> fonksiyonu kullanılarak, sensörlerin birbirini beklemediği, gerçek zamanlı çoklu görev (multitasking) mimarisi kurulmuştur.</li>
-            <li><strong>3. Görselleştirme:</strong> Veriler I2C protokolü ile OLED ekrana aktarılır; sayısal değerlerin yanı sıra bar-grafik ile görsel yoğunluk sağlanır.</li>
-            <li><strong>4. Eşik Bazlı Uyarı:</strong> Değerler normal aralığın dışına çıktığında RGB LED renk değiştirir ve buzzer uyarı verir.</li>
+            <li><strong>1. Çoklu Sensör Okuma:</strong> DHT22 (sıcaklık/nem), LDR (ışık) ve MQ-135 (hava kalitesi) sensörlerinden veri alınır. Her sensörün farklı örnekleme hızı vardır.</li>
+            <li><strong>2. Veri İşleme (Non-blocking):</strong> `delay()` yerine `millis()` kullanılarak sistemin sürekli aktif kalması ve aynı anda birden fazla işi yönetmesi sağlanır.</li>
+            <li><strong>3. Görselleştirme:</strong> Veriler I2C protokolü ile 0.96" OLED ekranda anlık olarak gösterilir.</li>
+            <li><strong>4. Eşik Bazlı Uyarı:</strong> Değerler normal aralık dışına çıkarsa RGB LED renk değiştirir ve buzzer sesli uyarı verir.</li>
         </ul>
 
-        <h3 class="scroll-reveal">Pin Bağlantıları</h3>
+        <h3 class="scroll-reveal">Öğretici Değer</h3>
         <ul class="scroll-reveal">
-            <li>DHT22: <b>D2</b> | LDR: <b>A0</b> | MQ-135: <b>A1</b></li>
-            <li>RGB LED: <b>D9(K), D10(Y), D11(M)</b> | Buzzer: <b>D6</b></li>
-            <li>OLED Ekran: <b>I2C (SDA/SCL)</b></li>
-        </ul>
-
-        <h3 class="scroll-reveal">Öğretici Değer (Sunum Notları)</h3>
-        <ul class="scroll-reveal">
-            <li><b>I2C Protokolü:</b> Aynı 2 kablolu hat üzerinden birden fazla cihazın adreslenmesi.</li>
-            <li><b>Non-blocking Programlama:</b> Gerçek zamanlı sistemlerde zamanlayıcıların önemi.</li>
-            <li><b>Veri Görselleştirme:</b> Ham verilerin insan tarafından okunabilir grafiksel formatlara dönüştürülmesi.</li>
+            <li><strong>I2C Haberleşme:</strong> Aynı SDA/SCL hattı üzerinden farklı adresli cihaz yönetimi.</li>
+            <li><strong>Multitasking Mantığı:</strong> Gömülü sistemlerde kesintisiz çalışma için zamanlayıcı (timer) kullanımı.</li>
         </ul>
 
         <h3 class="scroll-reveal">Kaynak Kod</h3>
         <div class="scroll-reveal code-container">
-<pre><code>#include &lt;Wire.h&gt;
-#include &lt;Adafruit_GFX.h&gt;
-#include &lt;Adafruit_SSD1306.h&gt;
-#include &lt;DHT.h&gt;
-
-#define mq_135 A1
-#define dht_22 2
-#define dht_tipi DHT22
-#define ldr A0
-#define kirmizi 9
-#define yesil 10
-#define mavi 11
-#define buzzer 6
-
-#define ekran_genislik 128
-#define ekran_yukseklik 64
-#define ekran_reset -1
-
-DHT dht(dht_22, dht_tipi);
-Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
-
-unsigned long son_ldr_okumasi=0;
-const unsigned long ldr_okuma_araligi=200;
-int anlik_isik=0;
-
-unsigned long son_dht_okumasi=0;
-const unsigned long dht_okuma_araligi=2500;
-float sicaklik=0.0;
-float nem=0.0;
-
-float min_nem=30.0;
-float max_nem=80.0;
-float min_sicaklik=17.0;
-float max_sicaklik=33.0;
-bool sensor_hata=false;
-
-unsigned long alarm_ses=0;
-const unsigned long alarm_ses_araligi=1000;
-
-void renk_sec(int k,int y,int m){
-  analogWrite(kirmizi,k);
-  analogWrite(yesil,y);
-  analogWrite(mavi,m);
-}
-
-void setup() {
-  dht.begin();
-  Serial.begin(9600);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  display.clearDisplay();
-  display.setTextColor(SSD1306_WHITE);
-  display.setTextSize(1);
-  pinMode(kirmizi,OUTPUT);
-  pinMode(mavi,OUTPUT);
-  pinMode(yesil,OUTPUT);
-  pinMode(buzzer,OUTPUT);
-}
-
-void loop() {
-  unsigned long simdiki_zaman=millis();
-  if(simdiki_zaman-son_ldr_okumasi>=ldr_okuma_araligi){
-    son_ldr_okumasi=simdiki_zaman;
-    anlik_isik=map(analogRead(ldr),0,1023,0,100);
-  }
-  if(simdiki_zaman-son_dht_okumasi>=dht_okuma_araligi){
-    float s=dht.readTemperature();
-    float n=dht.readHumidity();
-    son_dht_okumasi=simdiki_zaman;
-    if(!isnan(s) && !isnan(n)){
-      sensor_hata=false;
-      sicaklik=s;
-      nem=n;
-    } else {
-      sensor_hata=true;
-    }
-  }
-  if(sensor_hata==true){
-    renk_sec(0,0,255);
-  } else {
-    if((max_nem < nem || nem < min_nem)||(max_sicaklik < sicaklik || sicaklik < min_sicaklik)){
-      renk_sec(255,0,0);
-      if(simdiki_zaman-alarm_ses>=alarm_ses_araligi){
-        alarm_ses=simdiki_zaman;
-        tone(buzzer,1500,150);
-      }
-    } else {
-      renk_sec(0,255,0);
-    }
-  }
-}</code></pre>
+            <pre><code>(Buraya güncel kodunu ekle)</code></pre>
         </div>
 
-        <a href="ogrenci-setleri.html" class="scroll-reveal">← Geri Dön</a>
+        <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
     </div>
 </body>
 <script>
