@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">   
+    <title>Alerji & Bitki Kabini | Proje Detayı</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="scroll-reveal">Alerji ve Bitki İzolasyon Kabini (IoT)</h1>
+        
+        <h3 class="scroll-reveal">Proje Özeti</h3>
+        <p class="scroll-reveal">Ege Üniversitesi Mekatronik Bölümü bitirme projem olan bu çalışma, bitkilerin ideal yaşam koşullarını korurken, hava filtrasyonu ile kullanıcıyı alerjenlerden koruyan otonom bir mikro-klima kabinidir. ESP32 tabanlı hibrit bir otomasyon sistemine sahiptir[cite: 1].</p>
+
+        <h3 class="scroll-reveal">Sistem Özellikleri</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Hava Filtrasyonu:</strong> Sharp GP2Y10 toz sensörü ile polen yoğunluğu tespiti ve HEPA filtre ile %99 oranında alerjen arındırma[cite: 1].</li>
+            <li><strong>Otonom Kontrol:</strong> Toprak nemi, ışık (BH1750) ve su seviyesi sensörleri ile fan, su pompası ve tam spektrum LED yönetimi[cite: 1].</li>
+            <li><strong>Mobil Entegrasyon:</strong> Blynk uygulaması üzerinden gerçek zamanlı veri takibi ve uzaktan kontrol[cite: 1].</li>
+        </ul>
+
+        <h3 class="scroll-reveal">Blok Şeması</h3>
+        <div class="scroll-reveal"><img src="blok_semasi_gorseli.png" alt="Blok Şeması"></div>
+
+        <h3 class="scroll-reveal">Teknik Detaylar ve Sensör Mantığı</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Dinamik Karar Mekanizması:</strong> Piyasadaki basit "Aç/Kapat" sistemlerin aksine, ESP32'nin işlem gücü kullanılarak hibrit bir kontrol algoritması uygulanmıştır[cite: 1].</li>
+            <li><strong>Güvenlik:</strong> 12V düşük voltaj kullanımı ile güvenli çalışma ortamı ve röle entegrasyonu ile fiziksel erişim kontrolü[cite: 1].</li>
+            <li><strong>Haberleşme:</strong> I2C protokolü üzerinden sensör verisi işleme ve UART ile mobil haberleşme[cite: 1].</li>
+        </ul>
+
+        <h3 class="scroll-reveal">Geliştirme Planı</h3>
+        <ul class="scroll-reveal">
+            <li><strong>Makine Öğrenmesi:</strong> Gelecekte geçmiş verilerle tahminleyici sulama algoritmaları eklenmesi[cite: 1].</li>
+            <li><strong>Görüntü İşleme:</strong> ESP32-CAM ile bitki sağlığının görsel analizi ve hastalık tespiti[cite: 1].</li>
+        </ul>
+
+        <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
+    </div>
+</body>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    });
+    const hiddenElements = document.querySelectorAll('.scroll-reveal');
+    hiddenElements.forEach((el) => observer.observe(el));
+</script>
+</html>
