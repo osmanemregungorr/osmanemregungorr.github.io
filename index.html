@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <title>Osman Emre - Portfolyo</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Profil fotoğrafını yuvarlak ve sabit boyutlu yapan stil */
+        .profile-img {
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 4px solid #333; /* Kenarlık rengini zevkine göre değiştirebilirsin */
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Profil Fotoğrafı Bölümü -->
+        <div class="scroll-reveal" style="text-align: center;">
+            <img src="profil.jpeg" alt="Osman Emre" class="profile-img">
+        </div>
+        
         <h1 class="scroll-reveal">Merhaba, ben Osman Emre</h1>
         
         <p class="scroll-reveal">Ege Üniversitesi Meslek Yüksekokulu Mekatronik programı ikinci sınıf öğrencisi ve mezun
