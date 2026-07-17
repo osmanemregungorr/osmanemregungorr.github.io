@@ -27,7 +27,7 @@ h3 { font-size: 24px; font-weight: 600; color: var(--text-color); margin-top: 40
 p { font-size: 19px; color: var(--secondary-text); line-height: 1.6; }
 
 ul { list-style: none; padding: 0; }
-li { margin-bottom: 15px; font-size: 19px; color: var(--secondary-text); }
+li { margin-bottom: 15px; font-size: 19px; color: var(--text-color); }
 
 a { color: var(--accent-color); text-decoration: none; font-size: 19px; }
 a:hover { text-decoration: underline; }
@@ -43,10 +43,10 @@ pre {
 
 img {
     display: block;
-    max-width: 600px; /* Görselin asla 600 pikselden geniş olmamasını sağlar */
-    width: 100%;      /* Mobilde ekranı doldurur, bilgisayarda 600px'de durur */
-    height: auto;     /* En-boy oranını korur, bozulmaz */
+    max-width: 600px;
+    width: 100%;
+    height: auto;
     border-radius: 20px;
-    margin: 30px auto; /* Ortalar */
+    margin: 30px auto;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }

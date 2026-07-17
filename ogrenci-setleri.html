@@ -2,107 +2,18 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">   
-    <title>Öğrenci Setleri | Proje Detayı</title>
+    <title>Öğrenci Setleri</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Ultrasonik Mesafe Takibi</h1>
-        
-        <h3>Projenin Amacı</h3>
-        <p>Bu proje, sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan ve eşik değerine göre alarm veren bir mesafe ölçme sistemidir.</p>
-
-        <h3>Blok Şeması</h3>
-        <img src="ultrasonik_alarm_blok_semasi.png" alt="Proje Blok Şeması">
-
-        <h3>Nasıl Çalışır?</h3>
+        <h1>Öğrenci Setleri</h1>
+        <p>Geliştirdiğim elektronik proje setleri:</p>
         <ul>
-            <li><strong>1. Tarama:</strong> HC-SR04 sensörü mesafeyi tarar, potansiyel bir "tehdit" arar.</li>
-            <li><strong>2. Algılama:</strong> Mesafe 30 cm altına düştüğünde sistem algılar; kırmızı LED ve buzzer devreye girer.</li>
+            <li><a href="proje-1.html">1. Ultrasonik Mesafe Takibi</a></li>
+            <li><a href="#">2. Yakında Eklenecek...</a></li>
         </ul>
-
-        <h3>Kod Bloğu</h3>
-        <pre><code>
-```
-
-
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#define ekran_genislik 128
-#define ekran_yukseklik 64
-#define ekran_reset -1
-Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
-
-#define kirmizi_led 7
-#define yesil_led 6
-#define buzzer 8
-#define trig_pin 9
-#define echo_pin 10
-#define mesafe_esigi 30
-#define tolerans 250
-
-long mesafe_olc(){
-    digitalWrite(trig_pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig_pin, LOW);
-    long sure = pulseIn(echo_pin, HIGH, 30000);
-    return (sure * 0.034) / 2;
-}
-
-bool alarm_aktif = false;
-unsigned long son_tarama = 0;
-
-void setup() {
-    pinMode(kirmizi_led, OUTPUT);
-    pinMode(yesil_led, OUTPUT);
-    pinMode(buzzer, OUTPUT);
-    pinMode(echo_pin, INPUT);
-    pinMode(trig_pin, OUTPUT);
-    Serial.begin(9600);
-    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) for(;;);
-    display.clearDisplay();
-    display.setTextColor(SSD1306_WHITE);
-}
-
-void loop() {
-    long mesafe = mesafe_olc();
-    display.clearDisplay();
-    int sinirli_mesafe = constrain(mesafe, 0, 180);
-    int bar_genisligi = (sinirli_mesafe <= 30) ? map(sinirli_mesafe, 0, 30, 122, 61) : map(sinirli_mesafe, 30, 180, 61, 0);
-    
-    display.setTextSize(1);
-    display.setCursor(0, 5);
-    display.println("Mesafe:");
-    display.print(mesafe > 180 ? "> 180cm" : (String)mesafe + " cm");
-    
-    display.drawRect(2, 52, 124, 10, SSD1306_WHITE);
-    display.fillRect(3, 53, bar_genisligi, 8, SSD1306_WHITE);
-    display.display();
-
-    if(mesafe < mesafe_esigi && mesafe >= 0){
-        son_tarama = millis();
-        if(!alarm_aktif){ alarm_aktif = true; digitalWrite(yesil_led, LOW); }
-        digitalWrite(kirmizi_led, HIGH);
-        tone(buzzer, 1000);
-        delay(50);
-    } else {
-        if(alarm_aktif && (millis() - son_tarama > tolerans)){
-            alarm_aktif = false;
-            digitalWrite(kirmizi_led, LOW);
-            digitalWrite(yesil_led, HIGH);
-            noTone(buzzer);
-        }
-        delay(30);
-    }
-}
-```
-        </code></pre>
-
-        <a href="index.html">← Ana Sayfaya Dön</a>
+        <a href="index.html">← Ana Sayfa</a>
     </div>
 </body>
 </html>
