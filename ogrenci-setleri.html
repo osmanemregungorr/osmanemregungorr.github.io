@@ -33,16 +33,13 @@
 
     <h3>Nasıl Çalışır?</h3>
     <ul>
-        <li><strong>1. Tarama:</strong> Servo motor, üzerine monte edilmiş HC-SR04 ultrasonik mesafe sensörünü 0°'den 180°'ye kadar yavaşça döndürür (radar mantığı). Her açıda bir mesafe ölçümü alınır. Bu, sistemin "boşta bekleme" durumudur — sürekli çevreyi tarayarak potansiyel bir "tehdit" (yaklaşan el/nesne) arar.</li>
-        <li><strong>2. Algılama ve Kilitlenme:</strong> Ölçülen mesafe belirlenen bir eşiğin (30 cm) altına düştüğünde, sistem bunu bir "hedef" olarak algılar. Servo o anki açıda durur, kırmızı LED yanar ve buzzer alarm sesi çalmaya başlar.</li>
-        <li><strong>3. Takip (Tracking) Aşaması:</strong> Tepe tırmanma (hill-climbing) algoritması devreye girer. Sistem, mevcut açının biraz solunu ve sağını ölçer; hangi yönde mesafe daha kısaysa servo o yöne doğru adım atar. Bu işlem sürekli tekrarlanarak el hareket ettikçe sensörün onu "takip etmesi" sağlanır.</li>
-        <li><strong>4. Kayıp Hedef ve Normale Dönüş:</strong> Eğer hedef 2 saniye boyunca hiçbir yönde algılanamazsa, sistem "hedefi kaybettim" kararı verir. LED yeşile döner, buzzer susar ve sistem tekrar Tarama moduna geçer.</li>
+        <li><strong>1. Tarama:</strong> HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar.Mesafeyi tarayarak potansiyel bir "tehdit" (yaklaşan el/nesne) arar.</li>
+        <li><strong>2. Algılama:</strong> Ölçülen mesafe belirlenen bir eşiğin (30 cm) altına düştüğünde, sistem bunu algılar. Kırmızı LED yanar ve buzzer alarm sesi çalmaya başlar. Ayrıca mesafe ekranda bir bar ile anlık görülebilir.</li>
     </ul>
 
     <h3>Öğretici Değer</h3>
     <ul>
-        <li>Sensör-aktüatör senkronizasyonu: Bir sensörden gelen veri, doğrudan bir motorun hareketini kontrol ediyor (kapalı döngü kontrol sistemi mantığı).</li>
-        <li>State machine (durum makinesi): Sistem üç net durumda çalışır (Tarama, Kilitlenme, Takip). Bu, karmaşık sistemlerin temel tasarım prensibidir.</li>
+        <li>Sensör-aktüatör senkronizasyonu: Bir sensörden gelen veri, işenip bir oled ekran sayesinde görsel bir hale getiriliyor .</li>
         <li>Basit bir arama/optimizasyon algoritması: Hill-climbing, gerçek dünyada robotik ve yapay zekada kullanılan temel bir arama stratejisinin uygulamasıdır.</li>
     </ul>
 
