@@ -1,125 +1,55 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">   
-    <title>Mesafe Takibi 📏 | Proje Detayı</title>
+    <meta charset="UTF-8">
+    <title>Çok Sensörlü Ortam İzleme | Proje Detayı</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .code-container { background-color: #272822; color: #f8f8f2; padding: 20px; border-radius: 8px; overflow-x: auto; max-height: 400px; font-family: 'Courier New', monospace; font-size: 13px; margin: 20px 0; }
+        .scroll-reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        img { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="scroll-reveal">Ultrasonik Mesafe Takibi - ARDUİNO UNO</h1>
+        <h1 class="scroll-reveal">2. Ortam İzleme — ARDUİNO UNO</h1>
         
         <h3 class="scroll-reveal">Blok Şeması</h3>
-        <div class="scroll-reveal"><img src="ultrasonik_alarm_blok_semasi.png" alt="Blok Şeması"></div>
+        <div class="scroll-reveal"><img src="gemini-svg-2.svg" alt="Blok Şeması"></div>
 
         <h3 class="scroll-reveal">Bacak Bağlantı Şeması</h3>
-        <div class="scroll-reveal"><img src="arduino_pinout_semasi.png" alt="Bacak Bağlantı Şeması"></div>
+        <div class="scroll-reveal"><img src="gemini-svg.svg" alt="Bacak Bağlantı Şeması"></div>
 
         <h3 class="scroll-reveal">Projenin Amacı</h3>
-        <p class="scroll-reveal">Bu proje, ARDUİNO UNO üzerinden yapılmış ,sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan ve eşik değerine göre alarm veren bir mesafe ölçme sistemidir.</p>
+        <p class="scroll-reveal">Bu proje, çoklu sensörden gelen veriyi eşzamanlı olarak işleyip görselleştiren bir izleme sistemidir. Buradaki asıl teknik zorluk, birden fazla sensörü birbirini bloklamadan okuyabilmektir.</p>
 
         <h3 class="scroll-reveal">Nasıl Çalışır?</h3>
         <ul class="scroll-reveal">
-            <li><strong>1. Tarama:</strong> HC-SR04 ultrasonik mesafe sensörü mesafeyi sürekli tarar. Mesafeyi tarayarak potansiyel bir "tehdit" (yaklaşan el/nesne) arar.</li>
-            <li><strong>2. Algılama:</strong> Ölçülen mesafe belirlenen bir eşiğin (30 cm) altına düştüğünde, sistem bunu algılar. Kırmızı LED yanar ve buzzer alarm sesi çalmaya başlar. Ayrıca mesafe ekranda bir bar ile anlık görülebilir.</li>
+            <li><strong>1. Çoklu Sensör Okuma:</strong> DHT22 (sıcaklık/nem), LDR (ışık) ve MQ-135 (hava kalitesi) sensörlerinden veri alınır. Her sensörün farklı örnekleme hızı vardır.</li>
+            <li><strong>2. Veri İşleme (Non-blocking):</strong> `delay()` yerine `millis()` kullanılarak sistemin sürekli aktif kalması ve aynı anda birden fazla işi yönetmesi sağlanır.</li>
+            <li><strong>3. Görselleştirme:</strong> Veriler I2C protokolü ile 0.96" OLED ekranda anlık olarak gösterilir.</li>
+            <li><strong>4. Eşik Bazlı Uyarı:</strong> Değerler normal aralık dışına çıkarsa RGB LED renk değiştirir ve buzzer sesli uyarı verir.</li>
         </ul>
 
         <h3 class="scroll-reveal">Öğretici Değer</h3>
         <ul class="scroll-reveal">
-            <li>Sensör senkronizasyonu: Bir sensörden gelen veri, işlenip bir OLED ekran sayesinde görsel bir hale getiriliyor.</li>
-            <li>Basit optimizasyon algoritması: Hill-climbing, gerçek dünyada robotik ve yapay zekada kullanılan temel bir arama stratejisinin uygulamasıdır.</li>
+            <li><strong>I2C Haberleşme:</strong> Aynı SDA/SCL hattı üzerinden farklı adresli cihaz yönetimi.</li>
+            <li><strong>Multitasking Mantığı:</strong> Gömülü sistemlerde kesintisiz çalışma için zamanlayıcı (timer) kullanımı.</li>
         </ul>
 
-        <h3 class="scroll-reveal">Kod Bloğu</h3>
-        <pre class="scroll-reveal"><code>
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-
-#define ekran_genislik 128
-#define ekran_yukseklik 64
-#define ekran_reset -1
-Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
-
-#define kirmizi_led 7
-#define yesil_led 6
-#define buzzer 8
-#define trig_pin 9
-#define echo_pin 10
-#define mesafe_esigi 30
-#define tolerans 250
-
-long mesafe_olc(){
-    digitalWrite(trig_pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig_pin, LOW);
-    long sure = pulseIn(echo_pin, HIGH, 30000);
-    return (sure * 0.034) / 2;
-}
-
-bool alarm_aktif = false;
-unsigned long son_tarama = 0;
-
-void setup() {
-    pinMode(kirmizi_led, OUTPUT);
-    pinMode(yesil_led, OUTPUT);
-    pinMode(buzzer, OUTPUT);
-    pinMode(echo_pin, INPUT);
-    pinMode(trig_pin, OUTPUT);
-    Serial.begin(9600);
-    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) for(;;);
-    display.clearDisplay();
-    display.setTextColor(SSD1306_WHITE);
-}
-
-void loop() {
-    long mesafe = mesafe_olc();
-    display.clearDisplay();
-    int sinirli_mesafe = constrain(mesafe, 0, 180);
-    int bar_genisligi = (sinirli_mesafe <= 30) ? map(sinirli_mesafe, 0, 30, 122, 61) : map(sinirli_mesafe, 30, 180, 61, 0);
-    
-    display.setTextSize(1);
-    display.setCursor(0, 5);
-    display.println("Mesafe:");
-    display.print(mesafe > 180 ? "> 180cm" : (String)mesafe + " cm");
-    
-    display.drawRect(2, 52, 124, 10, SSD1306_WHITE);
-    display.fillRect(3, 53, bar_genisligi, 8, SSD1306_WHITE);
-    display.display();
-
-    if(mesafe < mesafe_esigi && mesafe >= 0){
-        son_tarama = millis();
-        if(!alarm_aktif){ alarm_aktif = true; digitalWrite(yesil_led, LOW); }
-        digitalWrite(kirmizi_led, HIGH);
-        tone(buzzer, 1000);
-        delay(50);
-    } else {
-        if(alarm_aktif && (millis() - son_tarama > tolerans)){
-            alarm_aktif = false;
-            digitalWrite(kirmizi_led, LOW);
-            digitalWrite(yesil_led, HIGH);
-            noTone(buzzer);
-        }
-        delay(30);
-    }
-}
-        </code></pre>
+        <h3 class="scroll-reveal">Kaynak Kod</h3>
+        <div class="scroll-reveal code-container">
+            <pre><code>(Buraya güncel kodunu ekle)</code></pre>
+        </div>
 
         <a href="ogrenci-setleri.html" class="scroll-reveal">← Listeye Dön</a>
     </div>
 </body>
 <script>
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            }
-        });
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
     });
-
-    const hiddenElements = document.querySelectorAll('.scroll-reveal');
-    hiddenElements.forEach((el) => observer.observe(el));
+    document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
 </script>
 </html>
