@@ -24,39 +24,44 @@
         <h1 class="scroll-reveal">Alerji ve Bitki İzolasyon Kabini</h1>
         
         <h3 class="scroll-reveal">Giriş ve Proje Amacı</h3>
-        <p class="scroll-reveal">Bitkilerin en sağlıklı şekilde gelişmesini sağlarken, kullanıcı sağlığını alerjen korumasıyla ön planda tutan, ESP32 tabanlı otonom bir izolasyon kabinidir[cite: 2]. Sistem; sıcaklık, nem, hava kalitesi (polen) ve ışık şiddetini yüksek doğrulukla kontrol eder[cite: 2].</p>
+        <p class="scroll-reveal">Bitkilerin en sağlıklı şekilde gelişmesini sağlarken, kullanıcı sağlığını alerjen korumasıyla ön planda tutan, ESP32 tabanlı otonom bir izolasyon kabinidir. Sistem; sıcaklık, nem, hava kalitesi (polen) ve ışık şiddetini yüksek doğrulukla kontrol eder.</p>
 
         <h3 class="scroll-reveal">Literatür Taraması ve Özgün Değer</h3>
         <ul class="scroll-reveal">
-            <li><strong>Mevcut Durum:</strong> Piyasadaki sistemler çoğunlukla manuel veya temel zamanlayıcılıdır[cite: 2].</li>
-            <li><strong>Özgün Değer:</strong> Projemiz, ESP32'nin işlem gücü ile sensör verilerini işleyerek "Hibrit Otomasyon" sağlar[cite: 2].</li>
-            <li><strong>Güvenlik:</strong> Erişim kontrollü yetiştirme alanı konsepti ile fiziksel güvenlik ve IoT entegrasyonu sunar[cite: 2].</li>
+            <li><strong>Mevcut Durum:</strong> Piyasadaki sistemler çoğunlukla manuel veya temel zamanlayıcılıdır.</li>
+            <li><strong>Özgün Değer:</strong> Projemiz, ESP32'nin işlem gücü ile sensör verilerini işleyerek "Hibrit Otomasyon" sağlar.</li>
+            <li><strong>Güvenlik:</strong> Erişim kontrollü yetiştirme alanı konsepti ile fiziksel güvenlik ve IoT entegrasyonu sunar.</li>
         </ul>
 
         <h3 class="scroll-reveal">Proje Planı</h3>
-        <p class="scroll-reveal">Literatür taraması, devre tasarımı, yazılım geliştirme, mekanik tasarım, birleştirme ve test süreçleri toplam 1 yarıyılda tamamlanmıştır[cite: 2].</p>
+        <ul class="scroll-reveal">
+            <li><strong>Aşamalar:</strong> Literatür taraması, devre tasarımı, yazılım geliştirme, mekanik tasarım, birleştirme ve test süreçleri toplam 1 yarıyılda tamamlanmıştır.</li>
+        </ul>
 
         <h3 class="scroll-reveal">Blok Şeması</h3>
         <div class="scroll-reveal"><img src="esp32_kabin_blok_semasi.png" alt="Blok Şeması"></div>
 
         <h3 class="scroll-reveal">Malzeme Listesi</h3>
         <ul class="scroll-reveal">
-            <li><strong>Mikrodenetleyici:</strong> ESP32[cite: 2].</li>
-            <li><strong>Sensörler:</strong> Kapasitif toprak nem, Sharp GP2Y10 toz, GY302 (BH1750) ışık, DTH22 ısı ve nem[cite: 2].</li>
-            <li><strong>Aktüatörler:</strong> Salyangoz fan, dalgıç su pompası, ultrasonik nem yapıcı, tam spektrum LED, Peltier soğutucu[cite: 2].</li>
-            <li><strong>Kontrol:</strong> 4 kanal röle modülleri, LM2596 voltaj regülatörü[cite: 2].</li>
+            <li><strong>Mikrodenetleyici:</strong> ESP32.</li>
+            <li><strong>Sensörler:</strong> Kapasitif toprak nem, Sharp GP2Y10 toz, GY302 (BH1750) ışık, DTH22 ısı ve nem.</li>
+            <li><strong>Aktüatörler:</strong> Salyangoz fan, dalgıç su pompası, ultrasonik nem yapıcı, tam spektrum LED, Peltier soğutucu.</li>
+            <li><strong>Kontrol:</strong> 4 kanal röle modülleri, LM2596 voltaj regülatörü.</li>
         </ul>
+
+        <h3 class="scroll-reveal">Bacak Bağlantı ve Devre Şeması</h3>
+        <div class="scroll-reveal"><img src="esp32_pinout_semasi.png" alt="Devre Şeması"></div>
 
         <h3 class="scroll-reveal">Teknik Detaylar ve Sensör Mantığı</h3>
         <ul class="scroll-reveal">
-            <li><strong>Hava Kalitesi:</strong> Sharp GP2Y10 ile partikül tespiti yapılarak HEPA filtre ve fanlar üzerinden sterilizasyon sağlanır[cite: 2].</li>
-            <li><strong>Mikro-İklim:</strong> Peltier soğutucu ve ultrasonik nem yapıcı ile ideal tropikal ortam simülasyonu gerçekleştirilir[cite: 2].</li>
-            <li><strong>Kontrol Algoritması:</strong> Sistem; sıcaklık >28.5°C, nem <%35 ve polen >0.35mg/m³ gibi eşik değerlerine göre karar verir[cite: 2].</li>
+            <li><strong>Hava Kalitesi:</strong> Sharp GP2Y10 ile partikül tespiti yapılarak HEPA filtre ve fanlar üzerinden sterilizasyon sağlanır.</li>
+            <li><strong>Mikro-İklim:</strong> Peltier soğutucu ve ultrasonik nem yapıcı ile ideal tropikal ortam simülasyonu gerçekleştirilir.</li>
+            <li><strong>Kontrol Algoritması:</strong> Sistem; sıcaklık >28.5°C, nem <%35 ve polen >0.35mg/m³ gibi eşik değerlerine göre karar verir.</li>
         </ul>
 
         <h3 class="scroll-reveal">Yazılım ve Kontrol Algoritması</h3>
         <div class="scroll-reveal code-container">
-            <pre><code>(#define BLYNK_TEMPLATE_ID "TMPL6pvXfeof3"
+<pre><code>#define BLYNK_TEMPLATE_ID "TMPL6pvXfeof3"
 #define BLYNK_TEMPLATE_NAME "kabin"
 #define BLYNK_AUTH_TOKEN "lyo_ne-9qRpH9cUFaHhfMgutMxLFhH3c"
 #define BLYNK_PRINT Serial
@@ -250,13 +255,13 @@ void loop() {
 
   // OLED GÜNCELLEME
   oledGuncelle(t, h, nemYuzde, fanAcik, pompaAcik, ledAcik);
-})</code></pre>
+}</code></pre>
         </div>
 
         <h3 class="scroll-reveal">Sonuç ve Gelecek Geliştirmeler</h3>
         <ul class="scroll-reveal">
-            <li><strong>Başarı:</strong> Hem bitki sağlığı hem de alerji hastaları için güvenli, uzaktan izlenebilir bir IoT alanı başarıyla simüle edilmiştir[cite: 2].</li>
-            <li><strong>Vizyon:</strong> Makine öğrenmesi ile "tahminleyici sulama", ESP32-CAM ile bitki hastalık tespiti ve peristaltik pompalarla otomatik gübreleme sisteme eklenebilir[cite: 2].</li>
+            <li><strong>Başarı:</strong> Hem bitki sağlığı hem de alerji hastaları için güvenli, uzaktan izlenebilir bir IoT alanı başarıyla simüle edilmiştir.</li>
+            <li><strong>Vizyon:</strong> Makine öğrenmesi ile "tahminleyici sulama", ESP32-CAM ile bitki hastalık tespiti ve peristaltik pompalarla otomatik gübreleme sisteme eklenebilir.</li>
         </ul>
 
         <h3 class="scroll-reveal">Teknik Rapor</h3>
