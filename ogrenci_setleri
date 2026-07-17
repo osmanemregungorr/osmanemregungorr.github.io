@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">   
+    <title>Öğrenci Setleri | Proje Detayı</title>
+    <style>
+        body { 
+            background-color: #1e1e1e; 
+            color: #d4d4d4; 
+            font-family: 'Consolas', monospace; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 40px; 
+        }
+        h1, h3 { color: #569cd6; }
+        pre { 
+            background: #000000; 
+            color: #ce9178; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border-left: 5px solid #569cd6; 
+            overflow-x: auto; 
+        }
+        a { color: #4ec9b0; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Ultrasonik Mesafe Takibi</h1>
+    
+    <h3>Projenin Amacı</h3>
+    <p>Bu proje, sensör verisini işleyerek görsel bir arayüz (0.96 OLED ekran) üzerinden anlık mesafe bilgisi sunan ve eşik değerine göre alarm veren bir mesafe ölçme sistemidir.</p>
+
+    <h3>Nasıl Çalışır?</h3>
+    <ul>
+        <li><strong>1. Tarama:</strong> Servo motor, HC-SR04 sensörünü 0°-180° arası döndürür.</li>
+        <li><strong>2. Algılama ve Kilitlenme:</strong> Mesafe 30 cm altına düştüğünde sistem hedefe kilitlenir, kırmızı LED yanar ve buzzer öter.</li>
+        <li><strong>3. Takip (Tracking):</strong> Hill-climbing algoritması ile elin hareketini takip eder.</li>
+        <li><strong>4. Kayıp Hedef:</strong> Hedef 2 saniye boyunca kaybolursa sistem normale döner.</li>
+    </ul>
+
+    <h3>Öğretici Değer</h3>
+    <ul>
+        <li>Sensör-aktüatör senkronizasyonu ve kapalı döngü kontrol mantığı.</li>
+        <li>State machine (Tarama, Kilitlenme, Takip) yapısı.</li>
+        <li>Hill-climbing arama stratejisinin gerçek dünya uygulaması.</li>
+    </ul>
+
+    <h3>Kod Bloğu</h3>
+    <pre><code>
+#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+
+#define ekran_genislik 128
+#define ekran_yukseklik 64
+#define ekran_reset -1
+Adafruit_SSD1306 display(ekran_genislik, ekran_yukseklik, &Wire, ekran_reset);
+
+#define kirmizi_led 7
+#define yesil_led 6
+#define buzzer 8
+#define trig_pin 9
+#define echo_pin 10
+#define mesafe_esigi 30
+#define tolerans 250
+
+long mesafe_olc(){
+    digitalWrite(trig_pin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trig_pin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trig_pin, LOW);
+    long sure = pulseIn(echo_pin, HIGH, 30000);
+    return (sure * 0.034) / 2;
+}
+
+bool alarm_aktif = false;
+unsigned long son_tarama = 0;
+
+void setup() {
+    pinMode(kirmizi_led, OUTPUT);
+    pinMode(yesil_led, OUTPUT);
+    pinMode(buzzer, OUTPUT);
+    pinMode(echo_pin, INPUT);
+    pinMode(trig_pin, OUTPUT);
+    Serial.begin(9600);
+    if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) for(;;);
+    display.clearDisplay();
+    display.setTextColor(SSD1306_WHITE);
+}
+
+void loop() {
+    long mesafe = mesafe_olc();
+    display.clearDisplay();
+    int sinirli_mesafe = constrain(mesafe, 0, 180);
+    int bar_genisligi = (sinirli_mesafe &lt;= 30) ? map(sinirli_mesafe, 0, 30, 122, 61) : map(sinirli_mesafe, 30, 180, 61, 0);
+    
+    display.setTextSize(1);
+    display.setCursor(0, 5);
+    display.println("Mesafe:");
+    display.print(mesafe &gt; 180 ? "&gt; 180cm" : (String)mesafe + " cm");
+    
+    display.drawRect(2, 52, 124, 10, SSD1306_WHITE);
+    display.fillRect(3, 53, bar_genisligi, 8, SSD1306_WHITE);
+    display.display();
+
+    if(mesafe &lt; mesafe_esigi && mesafe &gt;= 0){
+        son_tarama = millis();
+        if(!alarm_aktif){ alarm_aktif = true; digitalWrite(yesil_led, LOW); }
+        digitalWrite(kirmizi_led, HIGH);
+        tone(buzzer, 1000);
+        delay(50);
+    } else {
+        if(alarm_aktif && (millis() - son_tarama &gt; tolerans)){
+            alarm_aktif = false;
+            digitalWrite(kirmizi_led, LOW);
+            digitalWrite(yesil_led, HIGH);
+            noTone(buzzer);
+        }
+        delay(30);
+    }
+}
+    </code></pre>
+
+    <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+</body>
+</html>
