@@ -6,99 +6,101 @@
     <title>Osman Emre Güngör | CV</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        body { background-color: #121212 !important; color: #ffffff !important; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        /* Tasarımın diğer sayfalarla aynı olması için temel stil ayarları */
+        body { 
+            background-color: #121212 !important; 
+            color: #ffffff !important; 
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
         .container { max-width: 800px; margin: auto; }
-        .lang-switch { text-align: right; margin-bottom: 20px; }
-        .lang-switch button { background: #333; border: 1px solid #fff; color: #fff; cursor: pointer; padding: 5px 10px; margin-left: 5px; }
+        
         .header { text-align: center; margin-bottom: 40px; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #ffffff; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(255,255,255,0.2); }
+        .profile-img { 
+            width: 150px; height: 150px; border-radius: 50%; 
+            object-fit: cover; border: 4px solid #ffffff; 
+            margin-bottom: 20px; box-shadow: 0 4px 8px rgba(255,255,255,0.2); 
+        }
+        
+        h1 { margin-bottom: 10px; }
+        
         .cv-section { margin-bottom: 30px; }
-        h4 { border-bottom: 2px solid #ffffff !important; padding-bottom: 5px; color: #ffffff !important; margin-bottom: 15px; }
+        h4 { 
+            border-bottom: 2px solid #ffffff !important; 
+            padding-bottom: 5px; color: #ffffff !important; 
+            margin-bottom: 15px; 
+        }
+        
         .card { margin-bottom: 15px; }
         a { color: #87CEFA !important; text-decoration: none; }
-        .download-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background-color: #ffffff; color: #000000 !important; text-decoration: none; border-radius: 5px; font-weight: bold; }
         
-        /* Animasyon */
-        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
-        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+        .download-btn {
+            display: inline-block; margin-top: 20px; padding: 12px 25px;
+            background-color: #ffffff; color: #000000 !important; 
+            text-decoration: none; border-radius: 5px; font-weight: bold;
+        }
+        
+        /* İçerik koruma */
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Dil Seçimi -->
-        <div class="lang-switch">
-            <button onclick="setLanguage('tr')">TR</button>
-            <button onclick="setLanguage('en')">EN</button>
-        </div>
-
-        <div class="header scroll-reveal">
+        <div class="header">
             <img src="profil.jpeg" alt="Osman Emre" class="profile-img">
             <h1>Osman Emre Güngör</h1>
-            <p><b class="i18n" data-key="title">Mekatronik Teknikeri</b> | İzmir, Türkiye</p>
+            <p><b>Mekatronik Teknikeri</b> | İzmir, Türkiye</p>
         </div>
 
-        <div class="cv-section scroll-reveal">
-            <h4 class="i18n" data-key="profil_baslik">PROFİL</h4>
-            <p class="i18n" data-key="profil_metin">Ege Üniversitesi Mekatronik programı mezun adayıyım. Gömülü sistemler ve IoT alanlarında uzmanlaşmaya odaklandım. Embedded C/C++ ve Python dillerinde deneyime sahibim.</p>
+        <div class="cv-section">
+            <h4>PROFİL</h4>
+            <p>Ege Üniversitesi Mekatronik programı mezun adayıyım. Gömülü sistemler (STM32, ESP32, Arduino) ve IoT alanlarında uzmanlaşmaya odaklandım. Embedded C/C++ ve Python dillerinde deneyime sahibim.</p>
         </div>
 
-        <div class="cv-section scroll-reveal">
-            <h4 class="i18n" data-key="deneyim_baslik">İŞ DENEYİMİ</h4>
+        <div class="cv-section">
+            <h4>İŞ DENEYİMİ</h4>
             <div class="card">
                 <p><b>STAJYER - AKORD ELEKTRONİK</b> (02.2026 - 06.2026) | İzmir</p>
             </div>
             <div class="card">
-                <p class="i18n" data-key="staj2"><b>PROJE STAJYERİ - DEÜ YBS</b> (07.2026 - 08.2026) | İzmir</p>
-                <p>Bölüm başkanlığı bünyesinde, yönetim bilişim sistemleri entegrasyonu ve dijital sistem geliştirme odaklı yapılandırılmış proje çalışmaları gerçekleştirildi.</p>
+                <p><b>PROJE STAJYERİ - DEÜ YÖNETİM BİLİŞİM SİSTEMLERİ (YBS)</b> (13.07.2026 - 28.08.2026) | İzmir</p>
+                <p>Bölüm başkanlığı bünyesinde, yönetim bilişim sistemleri entegrasyonu ve dijital sistem geliştirme odaklı yapılandırılmış proje çalışmaları (ARDUİNO, ESP32, RASPBERRY Pİ3) gerçekleştirildi.</p>
             </div>
         </div>
 
-        <div style="text-align: center; margin-bottom: 30px;">
-            <a href="Osman_Emre_Gungor_cv.pdf" download class="download-btn i18n" data-key="cv_indir">📄 CV'yi PDF Olarak İndir</a>
+        <div class="cv-section">
+            <h4>BECERİLER & DİLLER</h4>
+            <ul>
+                <li><b>Diller:</b> Embedded C, C++, MicroPython, Python</li>
+                <li><b>İngilizce:</b> B2</li>
+                <li><b>Donanım:</b> STM32, ESP32, Arduino UNO, NodeMCU</li>
+                <li><b>Ortamlar:</b> Keil uVision, VS Code, Thonny, Arduino IDE, STM32CubeMX</li>
+                <li><b>Protokoller:</b> IoT, Wi-Fi/Bluetooth, UART, I2C, SPI, Photoshop</li>
+            </ul>
         </div>
 
-        <a href="index.html" class="scroll-reveal">← <span class="i18n" data-key="geri_don">Ana Sayfaya Dön</span></a>
+        <div class="cv-section">
+            <h4>EĞİTİM & SERTİFİKALAR</h4>
+            <ul>
+                <li>85.YIL ANADOLU LİSESİ</li>
+                <li>Ege Üniversitesi - Mekatronik (2023)</li>
+                <li>Fatih Projesi Kodlama Kampı Katılım Belgesi – MEB (2018)</li>
+                <li>Orange Summit Teşekkür Belgesi – UN Turkey & Dokuz Eylül Üniversitesi</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="Osman_Emre_Gungor_cv.pdf" download class="download-btn">📄 CV'yi PDF Olarak İndir</a>
+        </div>
+
+        <a href="index.html">← Ana Sayfaya Dön</a>
     </div>
 
     <script>
-        const translations = {
-            "tr": {
-                "title": "Mekatronik Teknikeri",
-                "profil_baslik": "PROFİL",
-                "profil_metin": "Ege Üniversitesi Mekatronik programı mezun adayıyım. Gömülü sistemler ve IoT alanlarında uzmanlaşmaya odaklandım.",
-                "deneyim_baslik": "İŞ DENEYİMİ",
-                "staj2": "PROJE STAJYERİ - DEÜ YBS",
-                "cv_indir": "📄 CV'yi PDF Olarak İndir",
-                "geri_don": "Ana Sayfaya Dön"
-            },
-            "en": {
-                "title": "Mechatronics Technician",
-                "profil_baslik": "PROFILE",
-                "profil_metin": "I am a graduate candidate of Ege University Mechatronics program. I focus on embedded systems and IoT, with experience in C/C++ and Python.",
-                "deneyim_baslik": "WORK EXPERIENCE",
-                "staj2": "PROJECT INTERN - DEU MIS",
-                "cv_indir": "📄 Download CV as PDF",
-                "geri_don": "Back to Home"
-            }
-        };
-
-        function setLanguage(lang) {
-            document.querySelectorAll('.i18n').forEach(el => {
-                const key = el.getAttribute('data-key');
-                if (translations[lang][key]) el.innerText = translations[lang][key];
-            });
-            localStorage.setItem('lang', lang);
-        }
-
-        // Animasyon için observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        });
-        document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
-
-        // Sayfa açıldığında dil ve animasyon tetikle
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage(localStorage.getItem('lang') || 'tr');
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'a' || e.key === 'A' || e.key === 'u' || e.key === 'U')) e.preventDefault();
         });
     </script>
 </body>
